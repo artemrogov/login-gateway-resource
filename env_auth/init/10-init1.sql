@@ -1,0 +1,19 @@
+ALTER SYSTEM SET max_connections = 500;
+
+CREATE ROLE login_gateway WITH
+    LOGIN
+    SUPERUSER
+    CREATEDB
+    CREATEROLE
+    INHERIT
+    REPLICATION
+    CONNECTION LIMIT -1
+    PASSWORD 'SW2z1I90xgz0rNgm';
+
+CREATE DATABASE login_gateway
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+
+GRANT ALL ON DATABASE login_gateway TO login_gateway WITH GRANT OPTION;

@@ -1,0 +1,75 @@
+services:
+  login-gateway-db-postgres:
+    image: library/postgres:${POSTGRES_IMAGE_TAG:-15.3}
+    volumes:
+      - type: bind
+        source: ./init/
+        target: /docker-entrypoint-initdb.d/
+        read_only: true
+    container_name: ${POSTGRES_CONTAINER_NAME:-login-gateway-db-postgres}
+    restart: on-failure
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    ports:
+      - ${POSTGRES_PORT_MAPPING:-5435}:5432
+    deploy:
+      resources:
+        limits:
+          memory: ${POSTGRES_MEMORY_LIMIT:-256M}
+    networks:
+      - test_containers_login_gateway
+
+  db_keycloak:
+    image: postgres:latest
+    restart: unless-stopped
+    container_name: db_keycloak
+    tty: true
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: keycloak_db
+      POSTGRES_PASSWORD: xCuoP983vm12
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_keycloak_data:/var/lib/postgresql/data/
+    networks:
+      - test_containers_login_gateway
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.0
+    container_name: keycloak
+    restart: unless-stopped
+    depends_on:
+      - db_keycloak
+    command: [ "start" ]
+    environment:
+      KC_HTTP_RELATIVE_PATH: "/auth"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT: "false"
+      KC_DB_USERNAME: keycloak_db
+      KC_DB_PASSWORD: xCuoP983vm12
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db_keycloak/keycloak_db
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: clear
+      KC_HTTP_PORT: 8181
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8484:8181"
+    networks:
+      - test_containers_login_gateway
+
+networks:
+  test_containers_login_gateway:
+    driver: bridge
+
+volumes:
+  db_keycloak_data:
