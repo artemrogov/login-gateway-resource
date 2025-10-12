@@ -14,16 +14,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuthProfileData {
 
+    /**
+     * Retrieves full profile data for the currently authenticated user.
+     *
+     * @return A map containing attribute names and their corresponding values.
+     */
     public Map<String, Object> getAuthProfileFullData() {
         Map<String, Object> attributes;
         Authentication authToken = SecurityContextHolder.getContext().getAuthentication();
         attributes = ((JwtAuthenticationToken) authToken).getTokenAttributes();
         return attributes;
-    }
-
-
-    public String getJwtTokenAuthUser() {
-        Authentication authToken = SecurityContextHolder.getContext().getAuthentication();
-        return ((JwtAuthenticationToken)authToken).getToken().getTokenValue();
     }
 }
