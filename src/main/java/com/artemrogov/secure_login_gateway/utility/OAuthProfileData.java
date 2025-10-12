@@ -20,9 +20,7 @@ public class OAuthProfileData {
      * @return A map containing attribute names and their corresponding values.
      */
     public Map<String, Object> getAuthProfileFullData() {
-        Map<String, Object> attributes;
         Authentication authToken = SecurityContextHolder.getContext().getAuthentication();
-        attributes = ((JwtAuthenticationToken) authToken).getTokenAttributes();
-        return attributes;
+        return ((JwtAuthenticationToken) authToken).getTokenAttributes();
     }
 }
