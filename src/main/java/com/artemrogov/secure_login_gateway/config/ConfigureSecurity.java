@@ -31,10 +31,10 @@ public class ConfigureSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)                              // Отключаем CSRF-защиту
-                .authorizeHttpRequests(authz -> authz.requestMatchers("/api/profiles/no-auth/**").permitAll().anyRequest().authenticated())  // Авторизация всех запросов
+                .authorizeHttpRequests(authz -> authz.requestMatchers("/api/profiles/no-auth/**").permitAll().anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Stateless сессия
                 .cors(withDefaults())                                       // CORS включен по умолчанию
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))  // Настройки OAuth2 Resource Server
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))  // Настройки OAuth2 Resource Server, можно добавить логику парсинга ролей и проч для бэкенада REST API
                 .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint((req, resp, exc) -> {
                     log.warn("Unauthorized attempt to access {}", req.getRequestURI(), exc);
                     resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
