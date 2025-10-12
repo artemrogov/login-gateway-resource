@@ -1,8 +1,11 @@
 
 ## Secure login gateway
 
-Проект демонстрирует реализацию OAuth2 Resource Server с поддержкой [OpenID Connect](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol). Цель проекта — показать, 
-как подключить сервер ресурсов к внешнему серверу аутентификации и авторизации, работающему по стандарту OpenID Connect.
+Проект демонстрирует реализацию OAuth2 Resource Server с поддержкой [OpenID Connect](https://auth0.com/docs/authenticate/protocols/openid-connect-protocol). 
+
+## Цель проекта
+
+Показать, как подключить сервер ресурсов к внешнему серверу аутентификации и авторизации, работающему по стандарту OpenID Connect.
 
 [См официальную документацию - OAuth 2.0 Resource Server JWT](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/jwt.html)
 
