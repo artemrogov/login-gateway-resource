@@ -8,12 +8,6 @@ group = 'com.artemrogov'
 version = '0.0.1-SNAPSHOT'
 description = 'Development of a custom web solution with authentication through Keycloak using OpenID Connect (OIDC) and Backend-for-Frontend (BFF) approach based on the Authorization Code Flow'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
