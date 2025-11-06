@@ -37,7 +37,7 @@ services:
       POSTGRES_USER: keycloak_db
       POSTGRES_PASSWORD: xCuoP983vm12
     ports:
-      - "5434:5432"
+      - "5438:5432"
     volumes:
       - db_keycloak_data:/var/lib/postgresql/data/
     networks:
@@ -49,8 +49,9 @@ services:
     restart: unless-stopped
     depends_on:
       - db_keycloak
-    command: [ "start" ]
+    command: [ "start","--import-realm" ]
     environment:
+      KC_HEALTH_ENABLED: true
       KC_HTTP_RELATIVE_PATH: "/auth"
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_HOSTNAME_STRICT: "false"
@@ -59,11 +60,18 @@ services:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://db_keycloak/keycloak_db
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: clear
+      KC_BOOTSTRAP_ADMIN_PASSWORD: xCuoP983vm12
       KC_HTTP_PORT: 8181
       KC_HTTP_ENABLED: "true"
+    healthcheck:
+      test: [ "CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then echo 'Healthcheck Successful';exit 0;else echo 'Healthcheck Failed';exit 1;fi;" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - "8484:8181"
+    volumes:
+      - ./keycloak/test_realm.json:/opt/keycloak/data/import/test_realm.json:ro
     networks:
       - test_containers_login_gateway
 
